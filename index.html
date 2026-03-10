@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+
+<!-- saved from url=(0063)file:///C:/Users/Trent/Downloads/Gyattonomics_v1.1.4%20(1).html -->
+<html lang="en" style="--cal-height: 655.2px;"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gyattonomics v1.1.1</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gyattonomics v1.1.1</title>
+<style>
+  :root {
+    --bg:       #f5f5f3;
+    --surface:  #ffffff;
+    --surface2: #f0f0ee;
+    --border:   #e2e2de;
+    --text:     #1a1a18;
+    --muted:    #909088;
+    --accent:   #2563eb;
+    --accent-soft: #eff6ff;
+    --green:    #16a34a;
+    --green-soft: #f0fdf4;
+    --red:      #dc2626;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --radius: 10px;
+  }
+
+
+  /* ── CONSISTENT FONT SIZING ─────────────── */
+  h1, .h1 { font-size: 1.4rem; }
+  h2, .h2 { font-size: 1rem; font-weight: 700; }
+  h3, .h3 { font-size: 0.85rem; font-weight: 700; }
+  h4, .h4 { font-size: 0.75rem; font-weight: 700; }
+  
+  label, .label { font-size: 0.75rem; }
+  button, .btn { font-size: 0.75rem; }
+  input, .input { font-size: 0.75rem; }
+  
+  .text-normal { font-size: 0.75rem; }
+  .text-small { font-size: 0.65rem; }
+  .text-tiny { font-size: 0.6rem; }
+  .text-muted { font-size: 0.7rem; color: var(--muted); }
+  
+  .stat-value { font-size: 1.7rem; font-weight: 700; }
+  .stat-label { font-size: 0.75rem; color: var(--muted); }
+  
+  /* Normalize all element styles */
+  * {
+    font-family: var(--font);
+  }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    padding: 28px 20px 60px;
+    font-size: 13px;
+  }
+
+  #loading-screen { display: none; }
+  #dashboard { display: none; }
+
+  /* ── SETUP ───────────────────────────────── */
+  #setup-screen {
+    max-width: 1700px;
+    margin: 60px auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  #setup-screen h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  #setup-screen > p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .setup-steps {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 28px; counter-reset: step;
+  }
+  .step {
+    counter-increment: step;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px 12px 44px;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    position: relative;
+    color: var(--text);
+  }
+  .step::before {
+    content: counter(step);
+    position: absolute;
+    left: 13px; top: 12px;
+    width: 20px; height: 20px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.65rem;
+  }
+  .step code {
+    background: #e8edf8;
+    color: var(--accent);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-family: 'Consolas', monospace;
+  }
+  .step strong { font-weight: 600; }
+
+  .cal-entries { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .cal-entry {
+    display: flex; gap: 8px; align-items: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px;
+  }
+  .cal-color-pick {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid var(--border); cursor: pointer;
+    padding: 2px; background: none; flex-shrink: 0;
+  }
+  .cal-name-input {
+    width: 100px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text); font-family: var(--font);
+    font-size: 0.75rem; padding: 6px 10px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .cal-url-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text); font-family: var(--font);
+    font-size: 0.75rem; padding: 6px 10px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .cal-name-input:focus, .cal-url-input:focus { border-color: var(--accent); }
+  .cal-url-input::placeholder { color: var(--muted); }
+  .remove-cal {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 1rem; padding: 0 4px;
+    transition: color 0.15s; line-height: 1;
+  }
+  .remove-cal:hover { color: var(--red); }
+
+  .add-cal-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    color: var(--muted); font-family: var(--font);
+    font-size: 0.75rem; padding: 8px;
+    cursor: pointer; width: 100%;
+    transition: all 0.15s; margin-bottom: 18px;
+  }
+  .add-cal-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: var(--radius);
+    padding: 11px 24px;
+    font-family: var(--font); font-weight: 600; font-size: 0.85rem;
+    cursor: pointer; width: 100%; transition: opacity 0.15s;
+  }
+  .btn:hover { opacity: 0.9; }
+  .error-msg { color: var(--red); font-size: 0.72rem; margin-top: 10px; display: none; }
+
+  /* ── LOADING ─────────────────────────────── */
+  #loading-screen {
+    max-width: 1700px; margin: 140px auto; text-align: center;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2.5px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading-screen p { font-size: 0.78rem; color: var(--muted); }
+
+  /* ── MODAL FOR NOTES ─────────────────────── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.open { display: flex; align-items: center; justify-content: center; }
+
+  .modal-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 1700px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    animation: slideUp 0.3s ease both;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .modal-
+header{
+  max-width:1700px;
+  margin:0 auto 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+  .modal-header h2 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    flex: 1;
+    word-break: break-word;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.15s;
+    margin-left: 12px;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .modal-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    padding: 12px;
+    background: var(--surface2);
+    border-radius: 8px;
+  }
+  .modal-meta strong { color: var(--text); font-weight: 600; }
+
+  .modal-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.82rem;
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 100px;
+    outline: none;
+    transition: border-color 0.15s;
+    line-height: 1.5;
+  }
+  .modal-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .modal-textarea::placeholder { color: var(--muted); }
+
+  .modal-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .modal-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .modal-btn.save {
+    background: var(--accent);
+    color: #fff;
+  }
+  .modal-btn.save:hover { opacity: 0.9; }
+  .modal-btn.cancel {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .modal-btn.cancel:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── DASHBOARD ───────────────────────────── */
+  
+header{
+  max-width:1700px;
+  margin:0 auto 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+  .header-title h1 {
+    font-size: 1.25rem; font-weight: 700;
+    letter-spacing: -0.02em; color: var(--text);
+  }
+  .header-title p {
+    font-size: 0.72rem; color: var(--muted);
+    margin-top: 2px;
+  }
+  .header-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .stats-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat-chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 8px 14px;
+    text-align: center; min-width: 68px;
+  }
+  .stat-chip .num {
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--accent); line-height: 1;
+  }
+  .stat-chip .label {
+    font-size: 0.6rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted); margin-top: 2px;
+  }
+
+  .icon-btn {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--muted);
+    font-family: var(--font); font-size: 0.75rem;
+    padding: 7px 12px; cursor: pointer; transition: all 0.15s;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Progress bar */
+  .progress-wrap {
+    max-width: 1700px; margin: 0 auto 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .progress-track {
+    flex: 1; background: var(--border);
+    border-radius: 100px; height: 4px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    border-radius: 100px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1); width: 0%;
+  }
+  .progress-label { font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
+
+  /* Week nav */
+  .week-nav {
+    max-width: 1700px; margin: 0 auto 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .week-nav button {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text);
+    padding: 5px 12px; cursor: pointer;
+    font-family: var(--font); font-size: 0.75rem; transition: all 0.15s;
+  }
+  .week-nav button:hover { border-color: var(--accent); color: var(--accent); }
+  .week-nav .wlabel { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+  .this-week-btn { margin-left: auto !important; }
+
+  /* ── VIEW CONTAINERS ─────────────────────── */
+  .dashboard-view { display: block; }
+  
+  
+  /* ── CALENDAR VIEW LAYOUT ───────────────── */
+  
+  
+  
+  
+  
+  
+  #calendar-view > .summary-panel {
+    width: 100%;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+
+
+  /* ── PAGE LAYOUT WITH STICKY SIDEBAR ─────── */
+  
+  
+  
+  
+  
+
+
+
+
+  /* ── TASKS SIDEBAR (ENHANCED) ───────────── */
+  .tasks-sidebar {
+    width: 280px !important;
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(255,255,255,0.5) 100%);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.08), 0 1px 4px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background-color: var(--surface);
+  }
+  
+  .tasks-sidebar h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .task-input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .task-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.75rem;
+    padding: 9px 12px;
+    outline: none;
+    transition: all 0.2s;
+  }
+  
+  .task-input:focus {
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  .task-input::placeholder {
+    color: var(--muted);
+  }
+  
+  .task-add-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 14px;
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+  
+  .task-add-btn:hover {
+    background: #1d4ed8;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    transform: translateY(-2px);
+  }
+  
+  .task-add-btn:active {
+    transform: translateY(0);
+  }
+  
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  
+  .task-item {
+    background: linear-gradient(135deg, var(--surface2) 0%, rgba(240, 240, 238, 0.5) 100%);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 12px;
+    cursor: grab;
+    transition: all 0.2s;
+    font-size: 0.75rem;
+    color: var(--text);
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .task-item:hover {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, #fff 0%, var(--surface2) 100%);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+    transform: translateX(4px);
+  }
+  
+  .task-item:active {
+    cursor: grabbing;
+    opacity: 0.7;
+  }
+  
+  .task-item.dragging {
+    opacity: 0.5;
+  }
+  
+  .task-item-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+  
+  .task-item-content span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .task-delete-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 4px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .task-delete-btn:hover {
+    color: var(--red);
+    transform: scale(1.2);
+  }
+  
+  .empty-tasks {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.7rem;
+    padding: 24px 12px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+  }
+  
+  /* Custom scrollbar for task list */
+  .tasks-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .tasks-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .tasks-sidebar::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+  
+  .tasks-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+  }
+
+
+  /* ── CALENDAR GRID (time-based) ─────────── */
+
+
+  .cal-outer {
+    display: flex;
+    height: var(--cal-height);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: opacity 0.1s ease-in-out;
+  }
+
+
+
+  /* Left time ruler */
+  .time-ruler {
+    width: 44px; flex-shrink: 0;
+    padding-top: 52px; /* align with day headers */
+    position: relative;
+  }
+  .time-ruler-inner { position: relative; height: var(--cal-height); }
+  .time-label {
+    position: absolute; right: 8px;
+    font-size: 0.6rem; color: var(--muted);
+    transform: translateY(-50%);
+    white-space: nowrap; line-height: 1;
+  }
+
+  /* Day columns */
+
+  .day-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+
+  .day-
+header{
+  max-width:1700px;
+  margin:0 auto 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+  .day-col + .day-col .day-
+header{
+  max-width:1700px;
+  margin:0 auto 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+  .day-header .dname {
+    font-size: 0.58rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+  .day-header .dnum {
+    font-size: 1.2rem; font-weight: 700; line-height: 1.1;
+    color: var(--text); margin-top: 1px;
+  }
+  .day-header .dprog { font-size: 0.58rem; color: var(--muted); margin-top: 2px; }
+  .day-header.today { background: var(--accent-soft); border-color: var(--accent); }
+  .day-header.today .dnum { color: var(--accent); }
+  .day-header.today .dname { color: var(--accent); }
+
+  /* Time body — events live here */
+
+  .day-body {
+    flex: 1;
+    position: relative;
+    background: white;
+    border-right: 1px solid var(--border);
+  }
+  .day-body:last-child {
+    border-right: none;
+  }
+
+  .day-col + .day-col .day-body { border-left: none; }
+
+  /* Hour lines inside body */
+  .hour-line {
+    position: absolute; left: 0; right: 0;
+    border-top: 1px solid var(--border);
+    pointer-events: none; z-index: 0;
+  }
+  .hour-line.half {
+    border-top: 1px dashed var(--border);
+    opacity: 0.5;
+  }
+
+  /* Current time indicator */
+  .now-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: #ef4444; z-index: 5; pointer-events: none;
+  }
+  .now-line::before {
+    content: '';
+    position: absolute; left: -3px; top: -4px;
+    width: 8px; height: 8px;
+    background: #ef4444; border-radius: 50%;
+  }
+
+  /* Event cards — absolutely positioned */
+
+  .event-card {
+    position: absolute;
+    width: calc(100% - 4px);
+    left: 2px;
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--ev-color, var(--accent));
+    border-radius: 6px;
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .event-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+  
+  .event-card.done {
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+
+  /* Task events (dragged tasks) — visually distinct */
+  .event-card.task {
+    border-style: dashed;
+    background: repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--ev-color) 18%, white) 0px,
+      color-mix(in srgb, var(--ev-color) 18%, white) 8px,
+      white 8px,
+      white 16px
+    ) !important;
+  }
+  body.dark .event-card.task{
+    background: repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--ev-color) 18%, var(--surface2)) 0px,
+      color-mix(in srgb, var(--ev-color) 18%, var(--surface2)) 8px,
+      var(--surface2) 8px,
+      var(--surface2) 16px
+    ) !important;
+  }
+
+  .event-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    z-index: 10;
+  }
+  .event-card.done {
+    background: var(--green-soft);
+    border-color: #bbf7d0;
+    border-left-color: var(--green);
+    opacity: 0.75;
+  }
+  .event-card.done .etitle { text-decoration: line-through; color: var(--muted); }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Card content adapts to height */
+  .event-top { display: flex; align-items: flex-start; gap: 5px; }
+  .check-btn {
+    width: 13px; height: 13px; border-radius: 3px;
+    border: 1.5px solid var(--border); background: none;
+    cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; margin-top: 1px;
+  }
+  .check-btn:hover { border-color: var(--accent); }
+  .check-btn.checked { background: var(--green); border-color: var(--green); }
+  .check-btn.checked::after { content: '✓'; font-size: 7px; color: #fff; font-weight: 700; }
+
+  .einfo { flex: 1; min-width: 0; }
+  .etitle {
+    font-size: 0.7rem; font-weight: 600;
+    line-height: 1.25; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .etime { font-size: 0.6rem; color: var(--muted); line-height: 1.2; }
+  .ecal {
+    display: inline-block; font-size: 0.52rem; font-weight: 500;
+    padding: 1px 5px; border-radius: 3px; margin-top: 2px;
+    background: color-mix(in srgb, var(--ev-color) 15%, transparent);
+    color: var(--ev-color); white-space: nowrap;
+  }
+
+  /* Note button — fixed to right side of card */
+  .note-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.15s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    z-index: 5;
+  }
+  .note-btn:hover { 
+    color: var(--accent);
+    transform: scale(1.15);
+  }
+  .note-btn.has-note { color: var(--accent); }
+
+  /* Resize handle for all event cards */
+  .event-card .resize-handle{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:10px;
+    cursor: ns-resize;
+    opacity:0;
+  }
+  .event-card:hover .resize-handle{ opacity:1; }
+
+  /* Right-click context menu */
+  #ctx-menu{
+    position: fixed;
+    z-index: 20000;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    padding: 6px;
+    min-width: 220px;
+  }
+  #ctx-menu button{
+    width:100%;
+    text-align:left;
+    background: none;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--text);
+  }
+  #ctx-menu button:hover{
+    background: var(--surface2);
+  }
+  #ctx-menu .sep{
+    height:1px;
+    background: var(--border);
+    margin: 6px 0;
+  }
+
+
+  
+  /* Three-dots menu button */
+  .menu-btn{
+    position:absolute;
+    top:2px;
+    right:2px;
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-family:var(--font);
+    font-size:1.1rem;
+    cursor:pointer;
+    padding:4px;
+    transition:color 0.15s, transform 0.15s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:20px;
+    height:20px;
+    z-index:6;
+    line-height:1;
+  }
+  .menu-btn:hover{ color:var(--accent); transform:scale(1.15); }
+
+  /* Resize handle (bottom edge) */
+  .resize-handle{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:8px;
+    cursor:ns-resize;
+    z-index:7;
+    opacity:0;
+  }
+  .event-card:hover .resize-handle{ opacity:1; }
+  .resize-handle::after{
+    content:'';
+    position:absolute;
+    left:50%;
+    top:3px;
+    width:28px;
+    height:2px;
+    transform:translateX(-50%);
+    background: color-mix(in srgb, var(--border) 70%, transparent);
+    border-radius:999px;
+  }
+
+  /* Action modal list buttons */
+  .action-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:10px;
+  }
+  .action-item{
+    width:100%;
+    text-align:left;
+    background:var(--surface2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:0.78rem;
+    font-weight:700;
+    cursor:pointer;
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    transition:all 0.15s;
+  }
+  .action-item:hover{ border-color:var(--accent); color:var(--accent); }
+  .action-item.danger:hover{ border-color:var(--red); color:var(--red); }
+
+
+/* ── DAILY RATING SECTION ───────────────── */
+  .daily-rating-section {
+    max-width: 1700px; margin: 24px auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .daily-rating-section h2 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em; }
+  }
+  .rating-subtitle {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .day-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .day-select-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 8px 16px;
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .day-select-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .day-select-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .rating-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .rating-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .rating-card h3 { font-size: 0.75rem; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .rating-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .rating-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .rating-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+  .rating-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .rating-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+  }
+  .rating-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .rating-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 8px;
+  }
+  .rating-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.2s;
+  }
+  .rating-number {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+    text-align: right;
+  }
+
+  /* ── SUMMARY ─────────────────────────────── */
+  .comparison-section {
+    max-width: 1700px; margin: 24px auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .comparison-section h2 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em; }
+  }
+  .comparison-subtitle {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .comparison-chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #week-comparison-chart {
+    max-width: 100%;
+    max-height: 320px;
+  }
+
+  .summary-panel {
+    max-width: 1700px; margin: 0 auto 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  #summary-top {
+    margin: 0 auto 24px;
+  }
+  .summary-panel h2 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em; }
+  }
+  .summary-top { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
+
+  .week-ring { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
+  .week-ring svg { transform: rotate(-90deg); }
+  .ring-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  .ring-pct { font-size: 0.9rem; font-weight: 700; color: var(--accent); line-height: 1; }
+  .ring-sub { font-size: 0.5rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 1px; }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; flex: 1; }
+  .summary-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px;
+  }
+  .summary-card h3 { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .big-stat { font-size: 1.7rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .sub { font-size: 0.65rem; color: var(--muted); margin-top: 3px; }
+
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+
+  /* ── WELLNESS SUMMARY ───────────────────── */
+  .wellness-summary {
+    margin-bottom: 24px;
+  }
+  .wellness-summary h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .wellness-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+  }
+  .wellness-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+  .wellness-label { font-size: 0.75rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .wellness-avg {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .wellness-sub {
+    font-size: 0.6rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .cat-breakdown { display: flex; flex-direction: column; gap: 8px; }
+  .cat-row { display: flex; align-items: center; gap: 10px; font-size: 0.72rem; }
+  .cat-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .cat-label { color: var(--text); flex: 1; }
+  .cat-bar-wrap { flex: 3; background: var(--surface2); border-radius: 100px; height: 5px; overflow: hidden; border: 1px solid var(--border); }
+  .cat-bar { height: 100%; border-radius: 100px; transition: width 0.5s; }
+  .cat-count { color: var(--muted); font-size: 0.68rem; min-width: 36px; text-align: right; }
+
+  .comments-log { margin-top: 0; }
+  .comments-log h3 { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .log-entry {
+    display: flex; gap: 12px; padding: 8px 0;
+    border-bottom: 1px solid var(--border); font-size: 0.72rem;
+    align-items: baseline;
+  }
+  .log-entry:last-child { border-bottom: none; }
+  .log-day { color: var(--muted); min-width: 48px; font-size: 0.65rem; }
+  .log-event { color: var(--accent); font-weight: 500; min-width: 110px; }
+  .log-comment { color: var(--text); line-height: 1.5; flex: 1; }
+  .no-comments { color: var(--muted); font-size: 0.72rem; }
+
+  @media (max-width: 960px) { .grid { grid-template-columns: repeat(4,1fr); } }
+  @media (max-width: 640px) { .grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 400px) { .grid { grid-template-columns: 1fr; } }
+
+body.dark {
+  --bg: #0f1115;
+  --surface: #1a1d23;
+  --surface2: #22262e;
+  --border: #2f3440;
+  --text: #e6e6e6;
+  --muted: #9aa3b2;
+  --accent: #3b82f6;
+  --accent-soft: #1e293b;
+  --green-soft: #11261b;
+}
+
+
+/* --- Improved Dark Mode Fixes --- */
+body.dark .event-card {
+  background: var(--surface2) !important;
+  color: var(--text);
+}
+
+body.dark .etitle,
+body.dark .etime,
+body.dark .ecal {
+  color: var(--text) !important;
+}
+
+body.dark .ecal {
+  background: rgba(255,255,255,0.08) !important;
+}
+
+body.dark .summary-card,
+body.dark .stat-chip,
+body.dark .day-
+header{
+  max-width:1700px;
+  margin:0 auto 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+
+
+/* ─────────────────────────────────────────────
+   MAIN DASHBOARD LAYOUT (v1.1.2 CLEAN PATCH)
+───────────────────────────────────────────── */
+
+#calendar-view {
+  max-width: 1700px;
+  margin: 0 auto;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.calendar-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tasks-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+@media (max-width: 1100px) {
+  #calendar-view { flex-direction: column; }
+  .tasks-sidebar {
+    width: 100%;
+    position: relative;
+    max-height: none;
+  }
+}
+
+
+.summary-panel,
+.daily-rating-section,
+.cal-outer,
+.comparison-section {
+  width:100%;
+}
+
+
+/* ─────────────────────────────────────────────
+   v1.2.2 TASK SIDEBAR STICKY (RIGHT SIDE)
+   Ensures the task bar stays down the side.
+───────────────────────────────────────────── */
+
+#calendar-view{
+  max-width:1700px;
+  margin:0 auto;
+  display:flex;
+  gap:24px;
+  align-items:flex-start;
+}
+
+#calendar-view .calendar-main{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+/* Ensure no parent scroll container breaks sticky */
+#calendar-view, #dashboard, body{ overflow: visible; }
+
+#calendar-view .tasks-sidebar{
+  width:300px;
+  flex-shrink:0;
+  position:sticky !important;
+  top:20px;
+  align-self:flex-start;
+  height:fit-content;
+  max-height:calc(100vh - 40px);
+  overflow-y:auto;
+  z-index:50;
+}
+
+/* Mobile: stack */
+@media (max-width:1100px){
+  #calendar-view{ flex-direction:column; }
+  #calendar-view .tasks-sidebar{
+    width:100%;
+    position:relative !important;
+    top:auto;
+    max-height:none;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   v1.2.6 Difficulty slider popover (per event)
+───────────────────────────────────────────── */
+.diff-btn{
+  position:absolute;
+  top:2px;
+  right:32px; /* leaves space for trash if present (task events) */
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:var(--muted);
+  font-size:0.95rem;
+  padding:4px;
+  width:18px;
+  height:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:6;
+  transition: color 0.15s, transform 0.15s;
+}
+.diff-btn:hover{ color:var(--accent); transform:scale(1.15); }
+.diff-btn.active{ color:var(--accent); }
+
+.diff-pop{
+  position: fixed;
+  width: 220px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  padding: 10px 10px 8px;
+  z-index: 10000;
+}
+.diff-pop .row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+.diff-pop .label{
+  font-size:0.68rem;
+  font-weight:700;
+  color:var(--text);
+}
+.diff-pop .val{
+  font-size:0.68rem;
+  font-weight:700;
+  color:var(--accent);
+  min-width:22px;
+  text-align:right;
+}
+.diff-pop input[type="range"]{ width:100%; }
+.diff-pop .chk{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:0.68rem;
+  color:var(--text);
+}
+.diff-pop .hint{
+  font-size:0.62rem;
+  color:var(--muted);
+  line-height:1.25;
+}
+
+
+/* ─────────────────────────────────────────────
+   v1.2.8 Summary Dashboard — Option 4 (Performance Card Stack)
+───────────────────────────────────────────── */
+.summary-hero{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:16px;
+  margin-top:14px;
+}
+.hero-card{
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, var(--accent) 8%), var(--surface));
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px 18px 16px;
+  position:relative;
+  overflow:hidden;
+}
+.hero-card::after{
+  content:"";
+  position:absolute;
+  inset:auto -40px -60px auto;
+  width:180px;
+  height:180px;
+  border-radius:999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  filter: blur(0px);
+  pointer-events:none;
+}
+.hero-title{
+  font-size:0.78rem;
+  font-weight:800;
+  letter-spacing:0.02em;
+  color:var(--text);
+  opacity:0.9;
+  margin-bottom:10px;
+}
+.hero-stat{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+}
+.hero-number{
+  font-size:2.2rem;
+  font-weight:900;
+  line-height:1;
+  color:var(--text);
+}
+.hero-suffix{
+  font-size:0.9rem;
+  font-weight:800;
+  color:var(--muted);
+}
+.hero-sub{
+  margin-top:10px;
+  font-size:0.72rem;
+  color:var(--muted);
+  line-height:1.25;
+}
+.summary-grid.small{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:14px;
+  margin-top:16px;
+}
+.summary-grid.small .summary-card{
+  border-radius:14px;
+  padding:16px;
+}
+.summary-grid.small .big-stat{
+  font-size:1.35rem;
+}
+@media (max-width: 1100px){
+  .summary-hero{ grid-template-columns: 1fr; }
+  .summary-grid.small{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+
+/* ─────────────────────────────────────────────
+   v1.2.9 Summary refinements (4 hero + dropdown metrics)
+───────────────────────────────────────────── */
+.summary-hero{
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.metrics-toggle{
+  margin-top:14px;
+}
+.metrics-toggle button{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  cursor: pointer;
+  color: var(--text);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.metrics-toggle button:hover{
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+}
+.metrics-toggle .caret{
+  display:inline-block;
+  transform: rotate(0deg);
+  transition: transform 0.15s;
+}
+.metrics-toggle.open .caret{
+  transform: rotate(180deg);
+}
+.metrics-extra{
+  display:none;
+}
+.metrics-toggle.open + .metrics-extra{
+  display:grid;
+}
+@media (max-width:1100px){
+  .summary-hero{ grid-template-columns: 1fr; }
+}
+
+
+/* ─────────────────────────────────────────────
+   v1.3.2 Layout override fix (undo stray flex-direction rules)
+───────────────────────────────────────────── */
+#calendar-view{ flex-direction: row !important; }
+.calendar-main > *{ width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; }
+@media (max-width:1100px){
+  #calendar-view{ flex-direction: column !important; }
+}
+
+
+/* ─────────────────────────────────────────────
+   v1.3.4 Restore sticky right tasks sidebar
+───────────────────────────────────────────── */
+#calendar-view{ display:flex !important; flex-direction:row !important; align-items:flex-start !important; gap:24px !important; }
+#calendar-view .calendar-main{ flex:1 !important; min-width:0 !important; display:flex !important; flex-direction:column !important; gap:24px !important; }
+#calendar-view .tasks-sidebar{ width:300px !important; flex-shrink:0 !important; position:sticky !important; top:20px !important; align-self:flex-start !important; max-height:calc(100vh - 40px) !important; overflow-y:auto !important; }
+@media (max-width:1100px){
+  #calendar-view{ flex-direction:column !important; }
+  #calendar-view .tasks-sidebar{ width:100% !important; position:relative !important; top:auto !important; max-height:none !important; }
+}
+</style>
+</head>
+<body>
+<!-- SETUP -->
+<div id="setup-screen" style="display: none;">
+  <h1>💪 Gyattonomics</h1>
+  <p style="margin-top:10px">
+    This version loads calendars via your <strong>local Node backend</strong> (Google Calendar API). No iCal links needed.
+  </p>
+
+  <div class="setup-steps" style="margin-top:18px">
+    <div class="step"><strong>1)</strong> Start the backend: <code>node server.js</code></div>
+    <div class="step"><strong>2)</strong> Authenticate once: <code>http://localhost:3000/auth</code></div>
+    <div class="step"><strong>3)</strong> Come back here and click <strong>Load</strong>.</div>
+  </div>
+
+  <div id="setup-error" class="error-msg" style="display:none; margin-top:16px;"></div>
+
+  <h2 style="margin-top:22px">Calendars to include</h2>
+  <div class="cal-entries" id="cal-entries" style="margin-top:10px"></div>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px">
+    <button class="btn" onclick="selectAllCalendars(true)">Select all</button>
+    <button class="btn" onclick="selectAllCalendars(false)">Select none</button>
+    <button class="btn" onclick="saveCalendarSelectionAndLoad()">🚀 Load</button>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading-screen" style="display: none;">
+<div class="spinner"></div>
+<p id="loading-msg">Trying to fetch "UNSW"…</p>
+</div>
+<!-- NOTE MODAL -->
+<div class="modal-overlay" id="note-modal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 id="modal-title">Event Title</h2>
+<button class="modal-close" onclick="closeNoteModal()">×</button>
+</div>
+<div class="modal-body">
+<div class="modal-meta" id="modal-meta">
+<div><strong>Time:</strong> <span id="meta-time">—</span></div>
+<div><strong>Calendar:</strong> <span id="meta-cal">—</span></div>
+</div>
+<textarea class="modal-textarea" id="note-textarea" placeholder="Add a note for this event…"></textarea>
+</div>
+<div class="modal-footer">
+<button class="modal-btn save" onclick="saveNoteFromModal()">Save Note</button>
+<button class="modal-btn cancel" onclick="closeNoteModal()">Cancel</button>
+</div>
+</div>
+</div>
+<!-- DIFFICULTY MODAL -->
+<div class="modal-overlay" id="difficulty-modal" style="display:none;">
+<div class="modal-content" style="max-width:480px;">
+<div class="modal-header">
+<h2>📊 Rate Difficulty</h2>
+<button class="modal-close" onclick="closeDifficultyModal()">×</button>
+</div>
+<div class="modal-body">
+<div id="difficulty-form"></div>
+<div style="margin-top:16px;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+<span style="font-size:0.75rem;font-weight:600;color:var(--text);">Difficulty Score</span>
+<span id="difficulty-score" style="font-size:1.1rem;font-weight:700;color:var(--accent);">0</span>
+</div>
+<div style="background:var(--border);border-radius:100px;height:8px;overflow:hidden;">
+<div id="difficulty-fill" style="height:100%;background:var(--accent);border-radius:100px;width:0%;transition:width 0.3s;"></div>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+<button class="modal-btn save" onclick="saveDifficultyScore()">Save Score</button>
+<button class="modal-btn cancel" onclick="closeDifficultyModal()">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- ACTIONS MODAL -->
+<div class="modal-overlay" id="actions-modal" style="display:none;">
+  <div class="modal-content" style="max-width:520px;">
+    <div class="modal-header">
+      <h2 id="actions-title">Event</h2>
+      <button class="modal-close" onclick="closeActionsModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-meta" id="actions-meta">
+        <div><strong>Time:</strong> <span id="actions-time">—</span></div>
+        <div><strong>Calendar:</strong> <span id="actions-cal">—</span></div>
+      </div>
+      <div class="action-list">
+        <button class="action-item" id="act-toggle-done" onclick="actionToggleDone()">Mark done</button>
+        <button class="action-item" onclick="actionOpenNote()">Add / edit note <span>💬</span></button>
+        <button class="action-item" onclick="actionOpenDifficulty()">Difficulty / exclude <span>🎚</span></button>
+        <button class="action-item" onclick="actionOpenMove()">Move date/time <span>📅</span></button>
+        <button class="action-item danger" onclick="actionDelete()">Delete <span>🗑</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOVE MODAL -->
+<div class="modal-overlay" id="move-modal" style="display:none;">
+  <div class="modal-content" style="max-width:520px;">
+    <div class="modal-header">
+      <h2>📅 Move / Resize</h2>
+      <button class="modal-close" onclick="closeMoveModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-meta">
+        <div><strong>Event:</strong> <span id="move-title">—</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label class="label">Date</label>
+          <input class="task-input" id="move-date" type="date"/>
+        </div>
+        <div></div>
+        <div>
+          <label class="label">Start</label>
+          <input class="task-input" id="move-start" type="time" step="300"/>
+        </div>
+        <div>
+          <label class="label">End</label>
+          <input class="task-input" id="move-end" type="time" step="300"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn save" onclick="saveMoveModal()">Save</button>
+      <button class="modal-btn cancel" onclick="closeMoveModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display: block;">
+<header>
+<div class="header-title">
+<h1>Gyattonomics <span>v1.1.1</span></h1>
+<p id="week-label-header">23 Feb – 1 Mar</p>
+</div>
+<div class="header-actions">
+<div class="stats-bar">
+<div class="stat-chip"><div class="num" id="stat-done">3</div><div class="label">Done</div></div>
+<div class="stat-chip"><div class="num" id="stat-remaining">69</div><div class="label">Left</div></div>
+<div class="stat-chip"><div class="num" id="stat-pct">4%</div><div class="label">Complete</div></div>
+</div>
+<button class="icon-btn" onclick="refreshAll()">↻ Refresh</button>
+<button class="icon-btn" id="view-toggle-btn" onclick="toggleView('analytics')">📊 Analytics</button>
+<button class="icon-btn" id="difficulty-index-toggle-btn" onclick="goDifficultyPage()">📋 Difficulty Index</button>
+<button class="icon-btn" onclick="goSetup()">⚙ Calendars</button>
+<button class="icon-btn" id="dark-btn" onclick="toggleDarkMode()">🌙</button>
+</div>
+</header>
+<div class="progress-wrap"><span class="progress-label" id="progress-label">4% complete</span>
+<div class="progress-track"><div class="progress-fill" id="progress-fill" style="width: 4%;"></div></div>
+</div>
+<!-- CALENDAR VIEW -->
+<div class="dashboard-view" id="calendar-view">
+<div class="calendar-main">
+<!-- Weekly Summary at top -->
+<div class="summary-panel" id="summary-top">
+<h2>⚡ Weekly Summary</h2>
+<div class="summary-hero">
+<div class="hero-card">
+<div class="hero-title">Load %</div>
+<div class="hero-stat">
+<div class="hero-number" id="sum-load-pct">0%</div>
+<div class="hero-suffix">done</div>
+</div>
+<div class="hero-sub"><span id="sum-load-done">0</span> of <span id="sum-load-week">0</span> difficulty units completed</div>
+</div>
+<div class="hero-card">
+<div class="hero-title">Notes Written</div>
+<div class="hero-stat">
+<div class="hero-number" id="sum-notes">0</div>
+<div class="hero-suffix">notes</div>
+</div>
+<div class="hero-sub">Across events this week</div>
+</div>
+<div class="hero-card">
+<div class="hero-title">Best Day</div>
+<div class="hero-stat">
+<div class="hero-number" id="sum-best">—</div>
+<div class="hero-suffix"></div>
+</div>
+<div class="hero-sub" id="sum-best-sub">No data yet</div>
+</div>
+<div class="hero-card">
+<div class="hero-title">Avg / Day</div>
+<div class="hero-stat">
+<div class="hero-number" id="sum-load-dayavg">0</div>
+<div class="hero-suffix">units</div>
+</div>
+<div class="hero-sub">Average planned difficulty load per day</div>
+</div>
+</div>
+<div class="metrics-toggle" id="metrics-toggle">
+<button onclick="toggleAdditionalMetrics()" type="button">
+          View additional metrics <span class="caret">▾</span>
+</button>
+</div>
+<div class="summary-grid small metrics-extra" id="metrics-extra">
+<div class="summary-card"><h3>Completed</h3><div class="big-stat" id="sum-done">0</div><div class="sub" id="sum-of">of 0 total</div></div>
+<div class="summary-card"><h3>Full Days ✓</h3><div class="big-stat" id="sum-full">0</div><div class="sub">100% complete</div></div>
+<div class="summary-card"><h3>Week Load</h3><div class="big-stat" id="sum-load-week-mini">0</div><div class="sub">difficulty units</div></div>
+</div>
+</div>
+<div class="wellness-summary" id="wellness-summary">
+<h3>💪 Weekly Wellness</h3>
+<div class="wellness-cards">
+<div class="wellness-card">
+<div class="wellness-label">⚡ Energy</div>
+<div class="wellness-avg" id="wellness-energy">6.1</div>
+<div class="wellness-sub">/10 avg</div>
+</div>
+<div class="wellness-card">
+<div class="wellness-label">🌟 Wellbeing</div>
+<div class="wellness-avg" id="wellness-wellbeing">5.7</div>
+<div class="wellness-sub">/10 avg</div>
+</div>
+<div class="wellness-card">
+<div class="wellness-label">🤝 Relationships</div>
+<div class="wellness-avg" id="wellness-relationships">5.3</div>
+<div class="wellness-sub">/10 avg</div>
+</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="divider"></div>
+<div class="cat-breakdown" id="cat-breakdown"><div class="cat-row">
+<div class="cat-dot" style="background:#7c6af7"></div>
+<div class="cat-label">Trent</div>
+<div class="cat-bar-wrap"><div class="cat-bar" style="width:1.9607843137254901%;background:#7c6af7"></div></div>
+<div class="cat-count">1/51</div>
+</div><div class="cat-row">
+<div class="cat-dot" style="background:#f07050"></div>
+<div class="cat-label">Work</div>
+<div class="cat-bar-wrap"><div class="cat-bar" style="width:28.57142857142857%;background:#f07050"></div></div>
+<div class="cat-count">2/7</div>
+</div><div class="cat-row">
+<div class="cat-dot" style="background:#60b8f0"></div>
+<div class="cat-label">UNSW</div>
+<div class="cat-bar-wrap"><div class="cat-bar" style="width:0%;background:#60b8f0"></div></div>
+<div class="cat-count">0/7</div>
+</div><div class="cat-row">
+<div class="cat-dot" style="background:#50c090"></div>
+<div class="cat-label">Uni</div>
+<div class="cat-bar-wrap"><div class="cat-bar" style="width:0%;background:#50c090"></div></div>
+<div class="cat-count">0/4</div>
+</div><div class="cat-row">
+<div class="cat-dot" style="background:#f0c040"></div>
+<div class="cat-label">CBS</div>
+<div class="cat-bar-wrap"><div class="cat-bar" style="width:0%;background:#f0c040"></div></div>
+<div class="cat-count">0/3</div>
+</div></div>
+<div class="divider"></div>
+<div class="comments-log">
+<h3>📝 Comments Log</h3>
+<div id="comments-log-content"><div class="log-entry">
+<div class="log-day">MON 23</div>
+<div class="log-event">506 (MacUni) --&gt; Metro (Sydh) --&gt; Central</div>
+<div class="log-comment">Change to transport method - can now drive to 2 Lachlan Square and metro in
+</div>
+</div><div class="log-entry">
+<div class="log-day">MON 23</div>
+<div class="log-event">Mathspace</div>
+<div class="log-comment">Stayed back late to do some international bookings
+
+</div>
+</div><div class="log-entry">
+<div class="log-day">MON 23</div>
+<div class="log-event">Sprints + Plyos</div>
+<div class="log-comment">This is not possible </div>
+</div><div class="log-entry">
+<div class="log-day">MON 23</div>
+<div class="log-event">More to Explore</div>
+<div class="log-comment">?
+</div>
+</div></div>
+</div>
+<div class="week-nav">
+<button onclick="changeWeek(-1)">← Prev</button>
+<span class="wlabel" id="week-nav-label">23 Feb – 1 Mar</span>
+<button onclick="changeWeek(1)">Next →</button>
+<button onclick="goToThisWeek()" style="margin-left:auto">This Week</button>
+</div><div class="cal-outer" id="calendar-grid">
+<!-- Calendar content generated dynamically -->
+</div><div class="daily-rating-section">
+<h2>📈 Daily Wellness Check-in</h2>
+<p class="rating-subtitle">Rate your day across key dimensions</p>
+<div class="day-selector">
+<button class="day-select-btn active" data-day="0">MON</button>
+<button class="day-select-btn" data-day="1">TUE</button>
+<button class="day-select-btn" data-day="2">WED</button>
+<button class="day-select-btn" data-day="3">THU</button>
+<button class="day-select-btn" data-day="4">FRI</button>
+<button class="day-select-btn" data-day="5">SAT</button>
+<button class="day-select-btn" data-day="6">SUN</button>
+</div>
+<div class="rating-cards" id="rating-cards">
+<div class="rating-card">
+<h3>⚡ Energy Levels</h3>
+<div class="rating-value">
+<div class="rating-bar">
+<div class="rating-fill" style="width: 50%; background: #f0c040;"></div>
+</div>
+<div class="rating-number">5</div>
+</div>
+<input class="rating-slider" data-day="0" data-metric="energy" max="10" min="0" style="accent-color: #f0c040;" type="range" value="5"/>
+</div>
+<div class="rating-card">
+<h3>🌟 Emotional Wellbeing</h3>
+<div class="rating-value">
+<div class="rating-bar">
+<div class="rating-fill" style="width: 90%; background: #50c090;"></div>
+</div>
+<div class="rating-number">9</div>
+</div>
+<input class="rating-slider" data-day="0" data-metric="wellbeing" max="10" min="0" style="accent-color: #50c090;" type="range" value="9"/>
+</div>
+<div class="rating-card">
+<h3>🤝 Relationship Building</h3>
+<div class="rating-value">
+<div class="rating-bar">
+<div class="rating-fill" style="width: 70%; background: #60b8f0;"></div>
+</div>
+<div class="rating-number">7</div>
+</div>
+<input class="rating-slider" data-day="0" data-metric="relationships" max="10" min="0" style="accent-color: #60b8f0;" type="range" value="7"/>
+</div>
+</div>
+</div></div>
+<!-- Week navigation -->
+<!-- Calendar grid - will be rendered by JavaScript -->
+<!-- DAILY RATING SECTION -->
+<div class="tasks-sidebar">
+<h3>📋 Tasks</h3>
+<div class="task-input-group">
+<input class="task-input" id="new-task-input" placeholder="Add a task…" type="text"/>
+<button class="task-add-btn" onclick="addTask()">+</button>
+</div>
+<div class="task-list" id="task-list">
+<div class="empty-tasks">No tasks yet</div>
+</div>
+</div></div><!-- close calendar-main -->
+<!-- TASKS SIDEBAR -->
+
+</div><!-- close calendar-view -->
+<!-- DIFFICULTY INDEX TAB -->
+<div class="dashboard-view" id="difficulty-index-view" style="display:none;">
+<div style="max-width: 1200px; margin: 0 auto;">
+<h2 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em;">📊 Difficulty Index</h2>
+<p style="font-size: 0.75rem; color: var(--muted); margin-bottom: 20px;">Define difficulty units (difficulty/hour) for different task types</p>
+<div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;">
+<table style="width: 100%; border-collapse: collapse;">
+<thead>
+<tr style="background: var(--surface2); border-bottom: 1px solid var(--border);">
+<th style="text-align: left; padding: 12px 16px; font-size: 0.75rem; font-weight: 600; color: var(--text);">Task Type</th>
+<th style="text-align: left; padding: 12px 16px; font-size: 0.75rem; font-weight: 600; color: var(--text);">Description</th>
+<th style="text-align: left; padding: 12px 16px; font-size: 0.75rem; font-weight: 600; color: var(--text);">Difficulty/Hour (0-100)</th>
+<th style="text-align: center; padding: 12px 16px; font-size: 0.75rem; font-weight: 600; color: var(--text);">Actions</th>
+</tr>
+</thead>
+<tbody id="difficulty-table-body">
+<!-- Generated by JavaScript -->
+</tbody>
+</table>
+</div>
+<div style="margin-top: 20px; padding: 16px; background: var(--surface2); border-radius: 10px; border: 1px solid var(--border);">
+<h3 style="font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 12px;">Add New Difficulty Type</h3>
+<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+<input id="new-task-type" placeholder="Task Type (e.g., Running)" style="flex: 1; min-width: 150px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.75rem; font-family: var(--font);" type="text"/>
+<input id="new-task-desc" placeholder="Description" style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.75rem; font-family: var(--font);" type="text"/>
+<input id="new-task-difficulty" max="100" min="0" placeholder="Difficulty/Hour" style="flex: 0 0 120px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.75rem; font-family: var(--font);" type="number"/>
+<button onclick="addDifficultyType()" style="padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">Add</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ANALYTICS VIEW -->
+<div class="dashboard-view" id="analytics-view" style="display:none;">
+<div class="comparison-section">
+<h2>📊 Cross-Week Completion Analysis</h2>
+<div class="comparison-subtitle">Track your productivity trends over the past 4 weeks and upcoming 3 weeks</div>
+<div class="comparison-chart-wrap">
+<canvas height="0" id="week-comparison-chart" width="0"></canvas>
+</div>
+</div>
+<div class="comparison-section">
+<h2>💪 Weekly Wellness Trends</h2>
+<div class="comparison-subtitle">Track your energy, wellbeing, and relationships throughout the week</div>
+<div class="comparison-chart-wrap">
+<canvas height="0" id="wellness-chart" width="0"></canvas>
+</div>
+</div>
+</div>
+
+<!-- DIFFICULTY PAGE (separate screen) -->
+<div id="difficulty-page" style="display:none;"></div>
+
+<script src="./Gyattonomics_finalised.js"></script>
+</body></html>
